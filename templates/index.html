@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Food Calorie Estimator</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Background image overlay -->
+  <div class="bg-overlay"></div>
+
+  <!-- Main app container -->
+  <div class="main-container">
+    <h2 class="text-center mb-4">🍱 Food Calorie Estimator</h2>
+
+    <form method="post" enctype="multipart/form-data">
+      <div class="mb-3">
+        <label for="image" class="form-label">Upload a food image:</label>
+        <input class="form-control" type="file" id="image" name="image" required onchange="resetResults()">
+      </div>
+      <div class="d-grid">
+        <button class="btn btn-primary" type="submit">Estimate Calories</button>
+      </div>
+    </form>
+
+    {% if uploaded_image and prediction %}
+    <div id="preview-container" class="text-center mt-4">
+      <h5>📷 Preview</h5>
+      <img src="{{ url_for('static', filename='uploads/' + uploaded_image) }}" class="preview-img" alt="Uploaded Image">
+    </div>
+
+    <div id="prediction-container" class="result-box">
+      <h5>🔍 Predictions</h5>
+      <p>Inception-v3: <strong>{{ prediction.inc[0] }} ({{ prediction.inc[1]|round(2) }}%)</strong></p>
+      <p>ResNet-50: <strong>{{ prediction.res[0] }} ({{ prediction.res[1]|round(2) }}%)</strong></p>
+      <div class="highlight mt-2">
+        Final Prediction: {{ prediction.final[0] }} ({{ prediction.final[2] }}, {{ prediction.final[1]|round(2) }}%)
+      </div>
+    </div>
+
+    <div id="usda-container" class="result-box">
+      <h5>🍽️ USDA Calorie Estimates</h5>
+      {% for food in usda %}
+      <div class="usda-box">
+        <strong>{{ food.description }}</strong><br>
+        Calories: {{ food.calories }}<br>
+        Serving: {{ food.serving }}
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+
+  <script>
+    function resetResults() {
+      document.getElementById('preview-container')?.remove();
+      document.getElementById('prediction-container')?.remove();
+      document.getElementById('usda-container')?.remove();
+    }
+  </script>
+</body>
+</html>

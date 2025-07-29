@@ -1,4 +1,4 @@
-# Food Calorie Estimator
+# Food Image Recognition and Calorie Estimator
 
 This is an AI-based web app that can recognize food from an image and estimate its calories.
 
